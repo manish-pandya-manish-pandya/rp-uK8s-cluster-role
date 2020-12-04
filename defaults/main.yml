@@ -1,2 +1,9 @@
 ---
 # defaults file for rp-uK8s-cluster-role
+
+# Define microk8s version
+# microk8s_version: "1.13/stable"
+
+# Enable to install Kubernetes dashboard
+k8s_dashboard: False
+
