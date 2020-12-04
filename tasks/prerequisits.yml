@@ -9,5 +9,14 @@
       - locate
       - emacs-nox
       - tree
-  tags:
-    - packages
+
+- name: Remove httpd to free up port 8080
+  apt:
+    state: absent
+    name:
+      - apache2
+
+- name: Apparmor must be started
+  service:
+    name: apparmor
+    state: started
