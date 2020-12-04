@@ -1,0 +1,40 @@
+# This file is generated from information provided by the datasource.  Changes
+# to it will not persist across an instance reboot.  To disable cloud-init's
+# network configuration capabilities, write a file
+# /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+# network: {% raw %}{config: disabled}{% endraw %}
+
+network:
+    version: 2
+{% if cluster_SSID is defined and cluster_WiFi_pwd is defined %}
+    ethernets:
+        eth0:
+            dhcp4: true
+            match:
+                driver: bcmgenet smsc95xx lan78xx
+            optional: true
+            set-name: eth0
+    wifis:
+        wlan0:
+            optional: true
+            access-points:
+                "{{ cluster_SSID }}":
+                    password: "{{ cluster_WiFi_pwd }}"
+            dhcp4: false
+            addresses: [{{ cluster_subnet }}.{{ cluster_subnet_offset + host_index }}/24]
+            gateway4: {{ cluster_gateway }}
+            nameservers:
+                addresses: [{{ cluster_DNS_resolver }}]
+{% else %}
+    ethernets:
+        eth0:
+            match:
+                driver: bcmgenet smsc95xx lan78xx
+            optional: true
+            set-name: eth0
+            dhcp4: false
+            addresses: [{{ cluster_subnet }}.{{ cluster_subnet_offset + host_index }}/24]
+            gateway4: {{ cluster_gateway }}
+            nameservers:
+                addresses: [{{ cluster_DNS_resolver }}]
+{% endif %}

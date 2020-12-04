@@ -1,0 +1,23 @@
+---
+- name: check for Ubuntu 20.x
+  import_tasks: force-ubuntu-20.yml
+
+- name: Update apt repo and cache on all Debian/Ubuntu hosts
+  apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+- name: Upgrade all packages on servers
+  apt: upgrade=dist force_apt_get=yes
+
+- name: Check if a reboot is needed on all servers
+  register: reboot_required_file
+  stat: path=/var/run/reboot-required get_md5=no
+
+- name: notify handler to reboot os if needed
+  when: reboot_required_file.stat.exists
+  debug:
+    msg: "rebooting {{ inventory_hostname }}"
+  changed_when: true
+  notify: Reboot OS
+
+- name: Flush handlers
+  meta: flush_handlers

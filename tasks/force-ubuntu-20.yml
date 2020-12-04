@@ -1,0 +1,4 @@
+---
+- name: Fail if not running on Ubuntu 20.x
+  fail: msg="These tasks should only be run on Ubuntu 20.x servers"
+  when: ansible_distribution != "Ubuntu" or ansible_distribution_major_version|int != 20

@@ -1,0 +1,23 @@
+---
+## tasks file for rp-uK8s-cluster-role
+#
+#- name: check for Ubuntu 20.x
+#  import_tasks: force-ubuntu-20.yml
+#
+#- name: Setup hostname and static IP 
+#  import_tasks: hostname-static-ip-setup.yml
+#
+#- name: install required packages
+#  import_tasks: prerequisits.yml
+#
+#- name: cgroup setup
+#  import_tasks: cgroup-setup.yml
+#
+#- name: disable UFW firewall and IPv6
+#  import_tasks: disable-fw-ipv6.yml
+#
+#- name: disable swap
+#  import_tasks: disable-swap.yml
+#
+- name: install microk8s
+  import_tasks: install-microk8s.yml

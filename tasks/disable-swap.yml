@@ -1,0 +1,20 @@
+---
+- name: check for any active swap
+  lineinfile:
+    path: /proc/swaps
+    regexp: '^.*[0-9].*$'
+    state: absent
+  check_mode: true
+  changed_when: false
+  register: active_swaps
+
+- name: Disable Swap
+  command: |
+    swapoff -a
+  when: active_swaps.found
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'

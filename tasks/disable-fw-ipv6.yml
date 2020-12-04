@@ -1,0 +1,10 @@
+---
+- name: Disabling ufw
+  community.general.ufw:
+    state: disabled
+
+- name: Set ip forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true

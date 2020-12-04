@@ -1,0 +1,14 @@
+---
+- name: setup remote host's hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: configure SSID and WiFi pwd with static IP
+  template:
+    src: 50-cloud-init.yaml.j2
+    dest: /etc/netplan/50-cloud-init.yaml
+
+- name: disable cloud-init network configuration
+  template:
+    src: 99-disable-network-config.cfg.j2
+    dest: /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg
