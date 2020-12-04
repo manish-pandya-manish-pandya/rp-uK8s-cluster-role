@@ -1,38 +1,94 @@
-Role Name
+Ansible Role to install microk8s on rp4 running ubuntu 20.x
 =========
 
-A brief description of the role goes here.
+Ansible role to install Microk8s (defaults to version "stable") on raspberry pi and form cluster. Includes option to install the Kubernetes dashboard.
 
-Requirements
-------------
+Microk8s (https://microk8s.io/) is a lightweight, development/test only Kubernetes installation. Do not run in production; in particular, the Kubernetes API is not secure.
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Inspired by [https://github.com/accanto-systems/ansible-role-microk8s]
+
+
+
+Pre requisites
+--------------
+
+Apparmor must be running:
+
+```
+sudo service apparmor start
+```
+
+Port 8080 should be free. Remove apache2:
+
+```
+sudo apt-get purge apache2
+```
+
+
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Use the following variables to customise the versions installed and enable/disable dashboard:
+
+```
+microk8s_version: "1.13/stable"
+```
+
+```
+k8s_dashboard: False
+```
+
+
+
+Persistent Storage
+------------------
+
+Microk8s supports the hostpath-provisioner and is enabled by default. This means that Kubernetes pods need only specify the storage class "microk8s-hostpath" and MicroK8s will take care of provisioning (hostpath) persistent volumes. These volumes will reside in the directory "/var/snap/microk8s/common/default-storage".
+
+
+
+Add an Insecure Docker Registry
+-------------------------------
+
+Add insecure registries to the file '/var/snap/microk8s/current/args/docker-daemon.json' and restart MicroK8s Docker using 'sudo systemctl restart snap.microk8s.daemon-docker.service'
+
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+N/A
+
+
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+```
+- hosts: all
+  become: true
+    become_user: root
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+  pre_tasks:
+      - name: install latest feature/security fixes
+            import_tasks: roles/rp-uK8s-cluster-role/tasks/os-patch-to-latest.yml
+
+  roles:
+      - roles/rp-uK8s-cluster-role
+```
+
+
 
 License
 -------
 
-BSD
+Apache2
+
+
+
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Manish Pandya
