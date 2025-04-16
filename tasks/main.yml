@@ -1,8 +1,8 @@
 ---
 # tasks file for rp-uK8s-cluster-role
 
-- name: check for Ubuntu 20.x
-  import_tasks: force-ubuntu-20.yml
+- name: check for Ubuntu 24.x
+  import_tasks: force-ubuntu-24.yml
 
 - name: Setup hostname and static IP 
   import_tasks: hostname-static-ip-setup.yml
